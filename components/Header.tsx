@@ -104,6 +104,9 @@ export function Header() {
           <Link href="/guides/grains-ou-capsules" className="h-nav" style={navBtn} onMouseEnter={() => setMenu(null)}>
             Guides
           </Link>
+          <Link href="/blog" className="h-nav" style={navBtn} onMouseEnter={() => setMenu(null)}>
+            Blog
+          </Link>
           <Link href="/marques/delonghi" className="h-nav" style={navBtn} onMouseEnter={() => setMenu("marques")}>
             Marques
           </Link>
