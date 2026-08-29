@@ -7,7 +7,7 @@
 // dépendance UI externe"), donc tout est re-skinné en styles inline avec la
 // palette éditoriale du site (voir components/ui.tsx).
 
-import type { CSSProperties, ReactNode } from "react";
+import type { ComponentProps, CSSProperties, ReactNode } from "react";
 import Image from "next/image";
 import { serif, mono } from "@/components/ui";
 
@@ -356,7 +356,7 @@ export function FaqItem({ question, children }: { question: string; children: Re
 }
 
 // ─── Table markdown brute (GFM) — wrapper scrollable ──────────────────────
-export function MdxTable(props: React.ComponentProps<"table">) {
+export function MdxTable(props: ComponentProps<"table">) {
   return (
     <div style={{ overflowX: "auto", margin: "20px 0" }}>
       <table style={{ width: "100%", fontSize: 14, borderCollapse: "collapse" }} {...props} />
