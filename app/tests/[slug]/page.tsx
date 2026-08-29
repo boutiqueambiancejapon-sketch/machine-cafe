@@ -61,7 +61,7 @@ export default async function TestPage({ params }: { params: Promise<{ slug: str
     const canonicalUrl = `${SITE_URL}/tests/${slug}`;
     const breadcrumb = [
       { label: "Accueil", href: "/" },
-      { label: "Avis", href: "/tests/magnifica-evo" },
+      { label: "Avis", href: "/tests" },
       { label: mdxDoc.frontmatter.title, href: `/tests/${slug}` },
     ];
     const { articleSchema, personSchema, breadcrumbSchema, faqSchema } = mdxArticleJsonLd(
@@ -98,7 +98,7 @@ export default async function TestPage({ params }: { params: Promise<{ slug: str
         <Breadcrumb
           items={[
             { label: "Accueil", href: "/" },
-            { label: "Tests", href: "/tests/magnifica-evo" },
+            { label: "Tests", href: "/tests" },
             { label: "De'Longhi", href: "/marques/delonghi" },
             { label: "Magnifica Evo" },
           ]}
@@ -486,7 +486,7 @@ export default async function TestPage({ params }: { params: Promise<{ slug: str
               {["Philips 5400 LatteGo →", "Krups Evidence ECO →", "Melitta Barista Smart →"].map((t) => (
                 <Link
                   key={t}
-                  href="/comparatifs/delonghi-vs-philips"
+                  href="/comparatifs"
                   className="h-chip-lift"
                   style={{
                     textAlign: "left",

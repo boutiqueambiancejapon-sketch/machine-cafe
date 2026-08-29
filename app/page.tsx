@@ -344,7 +344,7 @@ export default function HomePage() {
             </h2>
           </div>
           <Link
-            href="/guides/grains-ou-capsules"
+            href="/guides"
             className="h-tlink-amber"
             style={{ background: "none", border: "none", fontSize: 14, fontWeight: 700, color: "#241B17", padding: 0 }}
           >

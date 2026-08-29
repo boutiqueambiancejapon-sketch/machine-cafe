@@ -262,7 +262,7 @@ export function ComparateurClient() {
               {quickPicks.map((q) => (
                 <Link
                   key={q.p.id}
-                  href="/tests/magnifica-evo"
+                  href="/tests"
                   className="h-tile"
                   style={{
                     textAlign: "left",
@@ -468,7 +468,7 @@ export function ComparateurClient() {
                     <div style={{ fontSize: 19, fontWeight: 700, color: "#241B17" }}>{euro(p.price)}</div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%", marginTop: 16 }}>
                       <Link
-                        href="/tests/magnifica-evo"
+                        href="/tests"
                         className="h-dark"
                         style={{
                           textAlign: "center",

@@ -83,6 +83,11 @@ export function Header() {
           alignItems: "center",
           gap: 36,
         }}
+        // Fermeture du mega-menu quand la souris quitte l'en-tête ET les panneaux
+        // (les panneaux sont des descendants DOM de ce conteneur, même s'ils
+        // s'affichent en dessous) — évite la fermeture dans la bande morte
+        // entre les onglets et le panneau.
+        onMouseLeave={() => setMenu(null)}
       >
         <Link href="/" style={{ display: "flex", alignItems: "baseline", gap: 8 }} onMouseEnter={() => setMenu(null)}>
           <span style={{ fontFamily: serif, fontSize: 24, letterSpacing: "-.01em", color: "#241B17" }}>
@@ -90,32 +95,29 @@ export function Header() {
           </span>
         </Link>
 
-        <nav
-          data-r="nav"
-          style={{ display: "flex", alignItems: "center", gap: 4, flex: 1, minWidth: 0 }}
-          onMouseLeave={() => setMenu(null)}
-        >
-          <Link href="/machines/a-grains" className="h-nav" style={navBtn} onMouseEnter={() => setMenu("machines")}>
+        <nav data-r="nav" style={{ display: "flex", alignItems: "center", gap: 4, flex: 1, minWidth: 0 }}>
+          <Link href="/machines" className="h-nav" style={navBtn} onMouseEnter={() => setMenu("machines")}>
             Machines à café
           </Link>
-          <Link href="/comparateur" className="h-nav" style={navBtn} onMouseEnter={() => setMenu(null)}>
+          <Link href="/comparatifs" className="h-nav" style={navBtn} onMouseEnter={() => setMenu(null)}>
             Comparatifs
           </Link>
-          <Link href="/tests/magnifica-evo" className="h-nav" style={navBtn} onMouseEnter={() => setMenu(null)}>
+          <Link href="/tests" className="h-nav" style={navBtn} onMouseEnter={() => setMenu(null)}>
             Tests
           </Link>
-          <Link href="/guides/grains-ou-capsules" className="h-nav" style={navBtn} onMouseEnter={() => setMenu(null)}>
+          <Link href="/guides" className="h-nav" style={navBtn} onMouseEnter={() => setMenu(null)}>
             Guides
           </Link>
           <Link href="/blog" className="h-nav" style={navBtn} onMouseEnter={() => setMenu(null)}>
             Blog
           </Link>
-          <Link href={`/marques/${marqueSlug(megaBrands[0])}`} className="h-nav" style={navBtn} onMouseEnter={() => setMenu("marques")}>
+          <Link href="/marques" className="h-nav" style={navBtn} onMouseEnter={() => setMenu("marques")}>
             Marques
           </Link>
 
           {menu === "machines" && (
             <div
+              onMouseEnter={() => setMenu("machines")}
               style={{
                 position: "absolute",
                 left: 0,
@@ -202,6 +204,7 @@ export function Header() {
 
           {menu === "marques" && (
             <div
+              onMouseEnter={() => setMenu("marques")}
               style={{
                 position: "absolute",
                 left: 0,
@@ -262,7 +265,7 @@ export function Header() {
             ⌕
           </button>
           <Link
-            href="/comparatifs/delonghi-vs-philips"
+            href="/comparateur"
             className="h-bordered"
             style={{
               display: "flex",

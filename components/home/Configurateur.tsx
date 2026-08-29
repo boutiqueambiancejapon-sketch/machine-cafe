@@ -296,7 +296,7 @@ export function Configurateur() {
                         </div>
                         <div style={{ fontSize: 12.5, color: "#77716C", marginBottom: 8 }}>{r.priceText}</div>
                         <a
-                          href="/tests/magnifica-evo"
+                          href="/tests"
                           className="h-bordered-amber"
                           style={{
                             display: "inline-block",

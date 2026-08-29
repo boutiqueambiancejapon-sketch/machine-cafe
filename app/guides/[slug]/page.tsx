@@ -31,7 +31,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       <Breadcrumb
         items={[
           { label: "Accueil", href: "/" },
-          { label: "Guides", href: "/guides/grains-ou-capsules" },
+          { label: "Guides", href: "/guides" },
           { label: "Grains ou capsules" },
         ]}
       />
@@ -188,7 +188,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             ].map(([name, meta]) => (
               <Link
                 key={name}
-                href="/tests/magnifica-evo"
+                href="/tests"
                 className="h-tile"
                 style={{
                   textAlign: "left",

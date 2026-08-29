@@ -94,7 +94,7 @@ export function ProductCard({ p }: { p: Product }) {
           <div style={{ fontSize: 17, fontWeight: 700, color: "#241B17" }}>{euro(p.price)}</div>
           <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
             <Link
-              href="/tests/magnifica-evo"
+              href="/tests"
               className="h-dark"
               style={{
                 flex: 1,

@@ -73,7 +73,7 @@ export function CompareBar() {
                 Tout retirer
               </button>
               <Link
-                href="/comparatifs/delonghi-vs-philips"
+                href="/comparatifs"
                 className="h-amazon-solid"
                 style={{
                   background: "#B77945",
