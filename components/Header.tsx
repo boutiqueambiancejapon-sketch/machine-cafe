@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { CSSProperties } from "react";
 import { useCompare } from "@/components/CompareProvider";
 import { megaBrands } from "@/lib/data";
+import { marqueSlug } from "@/lib/hubs";
 import { mono, serif } from "@/components/ui";
 
 const navBtn: CSSProperties = {
@@ -27,29 +28,31 @@ const megaCaption: CSSProperties = {
 
 const megaLink: CSSProperties = { fontSize: 14, color: "#45413E" };
 
-const techLinks = [
-  "Machines automatiques",
-  "Machines à grains",
-  "Machines expresso",
-  "Machines à capsules",
-  "Machines avec broyeur",
-  "Machines compactes",
+type NavLink = { label: string; href: string };
+
+const techLinks: NavLink[] = [
+  { label: "Machines automatiques", href: "/machines/automatiques" },
+  { label: "Machines à grains", href: "/machines/a-grains" },
+  { label: "Machines expresso", href: "/machines/expresso" },
+  { label: "Machines à capsules", href: "/machines/a-capsules" },
+  { label: "Machines avec broyeur", href: "/machines/avec-broyeur" },
+  { label: "Machines compactes", href: "/machines/compactes" },
 ];
-const needLinks = [
-  "Meilleure machine à café",
-  "Meilleure machine à grains",
-  "Meilleure pour cappuccino",
-  "Meilleure machine silencieuse",
-  "Meilleure machine familiale",
-  "Meilleure machine pas chère",
+const needLinks: NavLink[] = [
+  { label: "Meilleure machine à café", href: "/machines/besoin/meilleure-machine-cafe" },
+  { label: "Meilleure machine à grains", href: "/machines/a-grains" },
+  { label: "Meilleure pour cappuccino", href: "/machines/besoin/cappuccino" },
+  { label: "Machine silencieuse", href: "/machines/besoin/silencieuse" },
+  { label: "Machine familiale", href: "/machines/besoin/familiale" },
+  { label: "Machine pas chère", href: "/machines/besoin/pas-chere" },
 ];
-const budgetLinks = [
-  "Moins de 200 €",
-  "200 – 300 €",
-  "300 – 500 €",
-  "500 – 800 €",
-  "800 – 1 500 €",
-  "Plus de 1 500 €",
+const budgetLinks: NavLink[] = [
+  { label: "Moins de 200 €", href: "/machines/budget/moins-de-200" },
+  { label: "200 – 300 €", href: "/machines/budget/200-300" },
+  { label: "300 – 500 €", href: "/machines/budget/300-500" },
+  { label: "500 – 800 €", href: "/machines/budget/500-800" },
+  { label: "800 – 1 500 €", href: "/machines/budget/800-1500" },
+  { label: "Plus de 1 500 €", href: "/machines/budget/plus-de-1500" },
 ];
 
 export function Header() {
@@ -107,7 +110,7 @@ export function Header() {
           <Link href="/blog" className="h-nav" style={navBtn} onMouseEnter={() => setMenu(null)}>
             Blog
           </Link>
-          <Link href="/marques/delonghi" className="h-nav" style={navBtn} onMouseEnter={() => setMenu("marques")}>
+          <Link href={`/marques/${marqueSlug(megaBrands[0])}`} className="h-nav" style={navBtn} onMouseEnter={() => setMenu("marques")}>
             Marques
           </Link>
 
@@ -138,24 +141,24 @@ export function Header() {
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   <div style={megaCaption}>Par technologie</div>
                   {techLinks.map((t) => (
-                    <Link key={t} href="/machines/a-grains" className="h-mega" style={megaLink}>
-                      {t}
+                    <Link key={t.href} href={t.href} className="h-mega" style={megaLink}>
+                      {t.label}
                     </Link>
                   ))}
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   <div style={megaCaption}>Par besoin</div>
                   {needLinks.map((t) => (
-                    <Link key={t} href="/comparateur" className="h-mega" style={megaLink}>
-                      {t}
+                    <Link key={t.href} href={t.href} className="h-mega" style={megaLink}>
+                      {t.label}
                     </Link>
                   ))}
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   <div style={megaCaption}>Par budget</div>
                   {budgetLinks.map((t) => (
-                    <Link key={t} href="/comparateur" className="h-mega" style={megaLink}>
-                      {t}
+                    <Link key={t.href} href={t.href} className="h-mega" style={megaLink}>
+                      {t.label}
                     </Link>
                   ))}
                 </div>
@@ -216,7 +219,7 @@ export function Header() {
                   {megaBrands.map((b) => (
                     <Link
                       key={b}
-                      href="/marques/delonghi"
+                      href={`/marques/${marqueSlug(b)}`}
                       className="h-brandtile"
                       style={{
                         textAlign: "left",
