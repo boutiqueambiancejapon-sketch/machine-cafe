@@ -56,8 +56,13 @@ const trio = getAmazonProducts(["B0AAA", "B0BBB", "B0CCC"]); // Product[] — th
 
 Dans le contenu MDX (blog, comparatif, fiche test), on ne touche jamais ces
 helpers directement : on utilise `<ProductRef asin="…" variant="card|inline|cta" />`
-et `<ProductComparison asins={[…]} />` — voir `components/ProductRef.tsx` et
-`components/ProductComparison.tsx`.
+et `<ProductComparison asins="B0AAA,B0BBB,B0CCC" />` — voir `components/ProductRef.tsx`
+et `components/ProductComparison.tsx`.
+
+> Les listes (`asins`, `specs`) se passent en **chaîne séparée par virgules** en
+> MDX, pas en tableau `{[…]}` : `next-mdx-remote` v6 supprime les props
+> d'expression JSX au `serialize()`. En JSX direct (hors MDX), le tableau
+> fonctionne aussi. Voir `DECISIONS.md`.
 
 ## Conformité Partenaires Amazon (non négociable)
 

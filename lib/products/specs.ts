@@ -11,6 +11,21 @@ import type { Product } from "./types";
 
 export type ParsedSpec = { key: string; value: string };
 
+/**
+ * Coerce un prop liste venu du MDX. `next-mdx-remote` v6 (retenu pour le
+ * correctif de sécurité GHSA-g4xw-jxrg-5f6m) DROPE les props d'expression
+ * JSX (`asins={[...]}`) au `serialize()` — seules les props string
+ * survivent. On accepte donc les deux : tableau (JSX direct) ou chaîne
+ * séparée par virgules / espaces (MDX). Voir DECISIONS.md.
+ */
+export function toStringList(v: string | string[] | undefined | null): string[] {
+  if (Array.isArray(v)) return v.map((s) => String(s).trim()).filter(Boolean);
+  return String(v ?? "")
+    .split(/[\s,]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 /** Parse une chaîne "Clé : valeur" sur le PREMIER " : " rencontré. */
 export function parseSpec(raw: string): ParsedSpec {
   const idx = raw.indexOf(" : ");

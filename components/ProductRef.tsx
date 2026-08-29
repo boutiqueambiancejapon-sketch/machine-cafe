@@ -3,14 +3,15 @@
 // test) ou directement en JSX. 100% RSC (aucune interactivité nécessaire) :
 // pas de "use client", pas d'event handler.
 //
-// <ProductRef asin="B0XXXXXXXX" />                      → variant "card" (défaut)
-// <ProductRef asin="B0XXXXXXXX" variant="inline" />      → lien texte simple
-// <ProductRef asin="B0XXXXXXXX" variant="cta" />         → bouton seul
-// <ProductRef asin="B0XXXXXXXX" specs={["Pression"]} />  → force les specs affichées (card)
+// <ProductRef asin="B0XXXXXXXX" />                     → variant "card" (défaut)
+// <ProductRef asin="B0XXXXXXXX" variant="inline" />     → lien texte simple
+// <ProductRef asin="B0XXXXXXXX" variant="cta" />        → bouton seul
+// <ProductRef asin="B0XXXXXXXX" specs="Pression,Puissance" />  → force les specs (card)
+//   (chaîne séparée par virgules en MDX ; tableau accepté en JSX direct)
 
 import Image from "next/image";
 import { getAmazonProduct } from "@/lib/products/read";
-import { pickSpecs } from "@/lib/products/specs";
+import { pickSpecs, toStringList } from "@/lib/products/specs";
 import { mono, serif } from "@/components/ui";
 import { ProductDisclosure } from "@/components/ProductDisclosure";
 
@@ -24,7 +25,7 @@ export function ProductRef({
   asin: string;
   variant?: Variant;
   /** Force la liste de specs affichées (variant "card" uniquement) — sinon whitelist par catégorie. */
-  specs?: string[];
+  specs?: string | string[];
 }) {
   const product = getAmazonProduct(asin);
   if (!product) {
@@ -46,7 +47,8 @@ export function ProductRef({
     return <AmazonButton product={product} />;
   }
 
-  const displaySpecs = pickSpecs(product, specs);
+  const forcedSpecs = toStringList(specs);
+  const displaySpecs = pickSpecs(product, forcedSpecs.length > 0 ? forcedSpecs : undefined);
 
   return (
     <div style={{ border: "1px solid #E8E1D6", borderRadius: 20, padding: 24, margin: "24px 0", background: "#FCFBF8" }}>

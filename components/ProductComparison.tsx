@@ -1,21 +1,30 @@
 // components/ProductComparison.tsx — tableau comparatif de N produits
 // Amazon synchronisés. 100% RSC.
 //
-// <ProductComparison asins={["B0AAA","B0BBB"]} />
-//   → specs = intersection automatique des specs communes aux produits
-// <ProductComparison asins={["B0AAA","B0BBB"]} specs={["Pression","Puissance"]} />
-//   → specs forcées (utile si les libellés Amazon diffèrent légèrement d'un
+// En MDX (props sérialisées par next-mdx-remote v6) : listes en chaîne
+//   <ProductComparison asins="B0AAA,B0BBB" />
+//   <ProductComparison asins="B0AAA,B0BBB" specs="Pression,Puissance" />
+// En JSX direct : tableau ou chaîne, les deux marchent.
+//   → sans `specs` : intersection automatique des specs communes aux produits
+//   → avec `specs` : liste forcée (si les libellés Amazon diffèrent d'un
 //     produit à l'autre et que l'intersection auto rate des correspondances)
 
 import Image from "next/image";
 import { getAmazonProducts } from "@/lib/products/read";
-import { commonSpecKeys, specValue } from "@/lib/products/specs";
+import { commonSpecKeys, specValue, toStringList } from "@/lib/products/specs";
 import { mono, serif } from "@/components/ui";
 import { ProductDisclosure } from "@/components/ProductDisclosure";
 
-export function ProductComparison({ asins, specs }: { asins: string[]; specs?: string[] }) {
-  const products = getAmazonProducts(asins);
-  const specKeys = specs && specs.length > 0 ? specs : commonSpecKeys(products);
+export function ProductComparison({
+  asins,
+  specs,
+}: {
+  asins: string | string[];
+  specs?: string | string[];
+}) {
+  const products = getAmazonProducts(toStringList(asins));
+  const forced = toStringList(specs);
+  const specKeys = forced.length > 0 ? forced : commonSpecKeys(products);
 
   return (
     <div style={{ margin: "24px 0" }}>

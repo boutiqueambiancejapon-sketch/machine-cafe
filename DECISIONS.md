@@ -81,10 +81,38 @@ Décidé avec Mathias (2 questions tranchées) :
   (utile si les libellés Amazon diffèrent légèrement d'un produit à
   l'autre — l'intersection stricte peut rater des correspondances).
 
-## En attente
+## 2026-08-29 — next-mdx-remote v6 + props liste en chaîne
 
-Le MCP nano-banana n'expose pas encore les tools `amazon_*` décrits dans le
-brief — voir `docs/PRODUCTS-REFRESH.md` § Blocage actuel. Tant que ce n'est
-pas résolu : pas de vrai produit dans `data/products/`, pas de scheduled
-task de refresh créé, pas de test de bout en bout (find → sync → contenu →
-resync) exécuté.
+`next-mdx-remote@5.0.0` est visé par GHSA-g4xw-jxrg-5f6m (exécution de code
+arbitraire au SSR de MDX non fiable — non exploitable ici, tout le MDX est
+first-party, mais les scanners le signalent). On passe donc à **`6.0.0`**.
+
+Piège de v6 : son `serialize()` **supprime les props d'expression JSX**
+(`asins={["a","b"]}` → `asins` devient `undefined` au rendu, crash
+`.map of undefined`). Seules les props **string** survivent. Corrigé sans
+downgrade : `<ProductComparison>` et `<ProductRef>` acceptent désormais
+`string | string[]` pour `asins` / `specs`, via `toStringList()`
+(`lib/products/specs.ts`) — en MDX on écrit `asins="B0AAA,B0BBB,B0CCC"`, en
+JSX direct le tableau marche toujours. `package-lock.json` était aussi
+désynchronisé de `package.json` (→ `npm ci` Vercel échouait) : régénéré.
+
+## 2026-08-29 — Test de bout en bout exécuté ✅
+
+Serveur nano-banana relancé, tools `amazon_*` opérationnels (appelés en
+HTTP direct sur `:3200` en attendant le rechargement du client MCP).
+3 machines à café ingérées (`data/products/B00400OMU0|B09TKRNWJX|B0GMXNJJ4V.json`),
+article `content/blog/machine-cafe-grains-3-budgets.mdx` créé (utilise
+`<ProductRef>` + `<ProductComparison>`), `next build` vert (11/11 pages,
+HTML avec prix/notes/liens affiliés/specs réels), `amazon_sync_all` re-syncé
+les 3 (prix B00400OMU0 315 € → 325 € entre deux runs, preuve du refresh).
+`sync-all` est passé en **asynchrone** (`{jobId}` + `GET /api/amazon/sync-all/:jobId`)
+et `dataForSeo()` réessaie 3× les erreurs transitoires (côté MCP nano-banana).
+
+## Reste à faire
+
+- Recharger le client Claude pour que les tools `amazon_*` du MCP soient
+  visibles dans les conversations (contourné ici en HTTP direct).
+- Créer le scheduled task mensuel (`docs/PRODUCTS-REFRESH.md`) une fois le
+  point ci-dessus fait.
+- Affiner la whitelist `lib/products/specs.ts` avec de vraies fiches Amazon
+  (libellés FR inégaux : « Type de café : haricots », « Poids : … livres »).
