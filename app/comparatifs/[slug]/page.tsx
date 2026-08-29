@@ -48,15 +48,31 @@ export default async function VersusPage({ params }: { params: Promise<{ slug: s
   const mdxDoc = getComparatifMdx(slug);
   if (mdxDoc) {
     const canonicalUrl = `${SITE_URL}/comparatifs/${slug}`;
-    const { articleSchema, faqSchema } = mdxArticleJsonLd(mdxDoc.frontmatter, mdxDoc.content, canonicalUrl);
+    const breadcrumb = [
+      { label: "Accueil", href: "/" },
+      { label: "Comparatifs", href: "/comparateur" },
+      { label: mdxDoc.frontmatter.title, href: `/comparatifs/${slug}` },
+    ];
+    const { articleSchema, personSchema, breadcrumbSchema, faqSchema } = mdxArticleJsonLd(
+      mdxDoc.frontmatter,
+      mdxDoc.content,
+      canonicalUrl,
+      breadcrumb,
+    );
     return (
       <>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
+        {breadcrumbSchema && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+        )}
         {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
         <MdxArticleShell
           frontmatter={mdxDoc.frontmatter}
           content={mdxDoc.content}
-          breadcrumb={[{ label: "Accueil", href: "/" }, { label: "Comparatif", href: "/comparateur" }, { label: mdxDoc.frontmatter.title }]}
+          breadcrumb={breadcrumb}
+          kind="comparatifs"
+          slug={slug}
         />
       </>
     );

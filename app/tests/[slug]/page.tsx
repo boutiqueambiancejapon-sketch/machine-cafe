@@ -59,15 +59,31 @@ export default async function TestPage({ params }: { params: Promise<{ slug: str
   const mdxDoc = getTestMdx(slug);
   if (mdxDoc) {
     const canonicalUrl = `${SITE_URL}/tests/${slug}`;
-    const { articleSchema, faqSchema } = mdxArticleJsonLd(mdxDoc.frontmatter, mdxDoc.content, canonicalUrl);
+    const breadcrumb = [
+      { label: "Accueil", href: "/" },
+      { label: "Avis", href: "/tests/magnifica-evo" },
+      { label: mdxDoc.frontmatter.title, href: `/tests/${slug}` },
+    ];
+    const { articleSchema, personSchema, breadcrumbSchema, faqSchema } = mdxArticleJsonLd(
+      mdxDoc.frontmatter,
+      mdxDoc.content,
+      canonicalUrl,
+      breadcrumb,
+    );
     return (
       <>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
+        {breadcrumbSchema && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+        )}
         {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
         <MdxArticleShell
           frontmatter={mdxDoc.frontmatter}
           content={mdxDoc.content}
-          breadcrumb={[{ label: "Accueil", href: "/" }, { label: "Tests", href: "/tests/magnifica-evo" }, { label: mdxDoc.frontmatter.title }]}
+          breadcrumb={breadcrumb}
+          kind="tests"
+          slug={slug}
         />
       </>
     );

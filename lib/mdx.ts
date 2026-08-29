@@ -14,8 +14,15 @@ export interface ArticleFrontmatter {
   description: string;
   date: string;
   updatedAt?: string;
+  /** Slug d'auteur dans data/authors.ts (défaut : camille). */
   author?: string;
   tags?: string[];
+  /** Mot-clé principal (SEO/GEO) — sert au prompt « Résumer avec l'IA ». */
+  keyword?: string;
+  /** Image de couverture (chemin public, ex. "/blog/mon-slug-cover.jpeg"). */
+  cover?: string;
+  /** 2-3 puces de synthèse affichées en tête d'article (TL;DR). */
+  tldr?: string[];
 }
 
 export interface MdxDoc {
@@ -75,6 +82,23 @@ export function getTestMdx(slug: string): MdxDoc | null {
 export function getAllTestMdx(): MdxDoc[] {
   return readMdxDir("tests");
 }
+
+// ─── Cross-section (pour « Articles liés ») ──────────────────────────────
+export type ContentKind = "blog" | "comparatifs" | "tests";
+
+/** Tous les MDX du site, tous dossiers confondus, avec leur type. */
+export function getAllContentDocs(): (MdxDoc & { kind: ContentKind })[] {
+  return (["blog", "comparatifs", "tests"] as ContentKind[]).flatMap((kind) =>
+    readMdxDir(kind).map((d) => ({ ...d, kind })),
+  );
+}
+
+/** hrefs par type de contenu. */
+export const KIND_HREF: Record<ContentKind, string> = {
+  blog: "/blog",
+  comparatifs: "/comparatifs",
+  tests: "/tests",
+};
 
 // ─── Helpers partagés ────────────────────────────────────────────────────
 

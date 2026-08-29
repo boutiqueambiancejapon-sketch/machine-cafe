@@ -37,17 +37,27 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   const canonicalUrl = `${SITE_URL}/blog/${slug}`;
-  const { articleSchema, faqSchema } = mdxArticleJsonLd(post.frontmatter, post.content, canonicalUrl);
+  const breadcrumb = [
+    { label: "Accueil", href: "/" },
+    { label: "Blog", href: "/blog" },
+    { label: post.frontmatter.title, href: `/blog/${slug}` },
+  ];
+  const { articleSchema, personSchema, breadcrumbSchema, faqSchema } = mdxArticleJsonLd(
+    post.frontmatter,
+    post.content,
+    canonicalUrl,
+    breadcrumb,
+  );
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
+      {breadcrumbSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      )}
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
-      <MdxArticleShell
-        frontmatter={post.frontmatter}
-        content={post.content}
-        breadcrumb={[{ label: "Accueil", href: "/" }, { label: "Blog", href: "/blog" }, { label: post.frontmatter.title }]}
-      />
+      <MdxArticleShell frontmatter={post.frontmatter} content={post.content} breadcrumb={breadcrumb} kind="blog" slug={slug} />
     </>
   );
 }

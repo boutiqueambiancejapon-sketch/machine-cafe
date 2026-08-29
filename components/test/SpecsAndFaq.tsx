@@ -91,7 +91,9 @@ export function FaqAccordion() {
                   color: "#241B17",
                 }}
               >
-                {f.q}{" "}
+                <h3 style={{ margin: 0, fontSize: "inherit", fontWeight: "inherit", color: "inherit", lineHeight: 1.4 }}>
+                  {f.q}
+                </h3>{" "}
                 <span
                   style={{
                     fontSize: 18,
