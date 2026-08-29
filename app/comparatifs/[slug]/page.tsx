@@ -4,12 +4,33 @@ import type { CSSProperties } from "react";
 import { versusRows, versusSlugs } from "@/lib/data";
 import { mono, serif } from "@/components/ui";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { getAllComparatifMdx, getComparatifMdx } from "@/lib/mdx";
+import { MdxArticleShell, mdxArticleJsonLd } from "@/components/mdx/MdxArticleShell";
+
+const SITE_URL = "https://10minutescafe.fr";
+
+// ─── Comparatifs authored en MDX (data/products/*.json + <ProductComparison>) ──
+// Additif : ne touche pas au gabarit structuré existant (delonghi-vs-philips).
+// Un fichier content/comparatifs/{slug}.mdx prend le pas sur le gabarit
+// lib/data.ts pour ce même slug.
 
 export function generateStaticParams() {
-  return versusSlugs.map((slug) => ({ slug }));
+  const structured = versusSlugs.map((slug) => ({ slug }));
+  const mdxSlugs = getAllComparatifMdx().map((c) => ({ slug: c.slug }));
+  const seen = new Set(structured.map((s) => s.slug));
+  return [...structured, ...mdxSlugs.filter((m) => !seen.has(m.slug))];
 }
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const mdxDoc = getComparatifMdx(slug);
+  if (mdxDoc) {
+    return {
+      title: mdxDoc.frontmatter.title,
+      description: mdxDoc.frontmatter.description,
+      alternates: { canonical: `${SITE_URL}/comparatifs/${slug}` },
+    };
+  }
   return {
     title: "De'Longhi vs Philips : quelle machine choisir ?",
     description:
@@ -22,6 +43,26 @@ const cell: CSSProperties = { gridTemplateColumns: "1.1fr 1fr 1fr" };
 
 export default async function VersusPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+
+  // ── Comparatif MDX (produits synchronisés data/products/) ──
+  const mdxDoc = getComparatifMdx(slug);
+  if (mdxDoc) {
+    const canonicalUrl = `${SITE_URL}/comparatifs/${slug}`;
+    const { articleSchema, faqSchema } = mdxArticleJsonLd(mdxDoc.frontmatter, mdxDoc.content, canonicalUrl);
+    return (
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+        {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
+        <MdxArticleShell
+          frontmatter={mdxDoc.frontmatter}
+          content={mdxDoc.content}
+          breadcrumb={[{ label: "Accueil", href: "/" }, { label: "Comparatif", href: "/comparateur" }, { label: mdxDoc.frontmatter.title }]}
+        />
+      </>
+    );
+  }
+
+  // ── Gabarit structuré existant (démo De'Longhi vs Philips, données lib/data.ts) ──
   if (!versusSlugs.includes(slug)) notFound();
 
   return (
