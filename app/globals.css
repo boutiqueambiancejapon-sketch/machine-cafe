@@ -1,0 +1,132 @@
+/* ============================================================
+   10minutescafe — global styles
+   Ported from the <style> block of the Claude Design canvas,
+   plus hover utility classes that replace the canvas'
+   `style-hover` / `style-focus` attributes.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: #FCFBF8;
+  color: #45413E;
+  font-family: var(--font-sans), Manrope, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: #5A3828; text-decoration: none; transition: color .18s; }
+a:hover { color: #B77945; }
+
+button { font-family: inherit; cursor: pointer; }
+
+input, select, textarea { font-family: inherit; }
+
+::selection { background: #B77945; color: #FCFBF8; }
+
+img { max-width: 100%; height: auto; }
+
+/* ── Keyframes ── */
+@keyframes riseIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sheetUp { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: none; } }
+@keyframes popIn { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes slideNext { from { opacity: 0; transform: translateX(22px); } to { opacity: 1; transform: none; } }
+
+/* ── Responsive rules (data-r hooks kept from the canvas) ── */
+@media (max-width: 1200px) {
+  [data-r="hdrshell"] { gap: 18px; padding: 0 24px; }
+  [data-r="nav"] { overflow: hidden; }
+  [data-r="grid6"] { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 1080px) {
+  [data-r="nav"] > a, [data-r="nav"] > button { display: none; }
+  [data-r="side"] { grid-template-columns: 1fr; }
+  [data-r="side"] > aside { position: static; }
+  [data-r="sider"] { grid-template-columns: 1fr; }
+  [data-r="sider"] > aside { position: static; flex-direction: row; flex-wrap: wrap; }
+  [data-r="sider"] > aside > div { flex: 1 1 240px; }
+  [data-r="prow"] { grid-template-columns: 140px 1fr; }
+  [data-r="prow"] > div:last-child { grid-column: 1 / -1; border-left: none; padding-left: 0; border-top: 1px solid #EDE6DA; padding-top: 16px; align-items: stretch; text-align: left; }
+  [data-r="grid4"] { grid-template-columns: repeat(2, 1fr); }
+  [data-r="grid3"] { grid-template-columns: repeat(2, 1fr); }
+  [data-r="foot"] { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 820px) {
+  [data-r="two"], [data-r="grid3"], [data-r="grid4"], [data-r="grid6"] { grid-template-columns: 1fr !important; }
+  [data-r="grid5"] { grid-template-columns: repeat(2, 1fr); }
+  [data-r="prow"] { grid-template-columns: 1fr; }
+  [data-r="foot"] { grid-template-columns: repeat(2, 1fr); }
+  [data-r="hdrright"] > button:last-child, [data-r="hdrright"] > a:last-child { display: none; }
+  section, [data-r="hdrshell"] { padding-left: 20px !important; padding-right: 20px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ============================================================
+   Hover / focus utilities (replace canvas `style-hover`)
+   ============================================================ */
+
+.h-nav { transition: color .18s; }
+.h-nav:hover { color: #B77945; }
+
+.h-mega { transition: transform .2s, color .2s; }
+.h-mega:hover { color: #B77945; transform: translateX(3px); }
+
+.h-brandtile { transition: transform .2s, border-color .2s; }
+.h-brandtile:hover { border-color: #B77945; transform: translateY(-2px); }
+
+.h-dark { transition: transform .18s, background .18s; }
+.h-dark:hover { background: #5A3828; transform: translateY(-1px); }
+
+.h-dark-lg { transition: transform .2s, background .2s, box-shadow .2s; }
+.h-dark-lg:hover { background: #5A3828; transform: translateY(-2px); box-shadow: 0 12px 28px -18px rgba(36,27,23,.9); }
+
+.h-outline { transition: transform .2s, background .2s; }
+.h-outline:hover { background: #F7F3EC; transform: translateY(-2px); }
+
+.h-bordered { transition: border-color .18s, color .18s, transform .2s; }
+.h-bordered:hover { border-color: #B77945; }
+.h-bordered-amber:hover { border-color: #B77945; color: #B77945; }
+
+.h-card { transition: transform .25s cubic-bezier(.2,.7,.3,1), box-shadow .25s; }
+.h-card:hover { transform: translateY(-4px); box-shadow: 0 22px 44px -34px rgba(36,27,23,.7); }
+
+.h-row { transition: transform .22s, box-shadow .22s; }
+.h-row:hover { transform: translateY(-2px); box-shadow: 0 20px 40px -34px rgba(36,27,23,.7); }
+
+.h-amazon { transition: background .2s, color .2s; }
+.h-amazon:hover { background: #B77945; color: #FCFBF8; }
+
+.h-amazon-solid { transition: transform .2s, background .2s; }
+.h-amazon-solid:hover { background: #A46A3B; transform: translateY(-2px); }
+
+.h-slide { transition: transform .2s, color .2s; }
+.h-slide:hover { transform: translateX(3px); color: #B77945; }
+
+.h-foot { transition: transform .2s, color .2s; }
+.h-foot:hover { color: #B77945; transform: translateX(2px); }
+
+.h-chip { transition: border-color .18s, transform .18s; }
+.h-chip:hover { border-color: #B77945; }
+.h-chip-lift:hover { border-color: #B77945; transform: translateY(-1px); }
+
+.h-tile { transition: transform .2s, border-color .2s; }
+.h-tile:hover { transform: translateY(-2px); border-color: #B77945; }
+
+.h-tlink-dark { transition: color .18s; }
+.h-tlink-dark:hover { color: #241B17; }
+.h-tlink-amber { transition: color .18s; }
+.h-tlink-amber:hover { color: #B77945; }
+
+.h-vrow { transition: background .18s; }
+.h-vrow:hover { background: #F7F3EC; }
+
+.f-inp { transition: border-color .18s; }
+.f-inp:focus { border-color: #B77945; outline: none; }
+
+/* Range input accent used by the comparateur budget slider */
+input[type="range"] { accent-color: #5A3828; }
