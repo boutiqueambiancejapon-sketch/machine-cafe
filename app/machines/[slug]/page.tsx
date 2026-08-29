@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { typeHubs, findTypeHub } from "@/lib/hubs";
+import { HUB_CONTENT } from "@/lib/hub-content";
 import { HubPage } from "@/components/hub/HubPage";
 
 const SITE_URL = "https://10minutescafe.fr";
@@ -28,6 +29,7 @@ export default async function MachineTypePage({ params }: { params: Promise<{ sl
   return (
     <HubPage
       hub={hub}
+      content={HUB_CONTENT[slug]}
       breadcrumb={[
         { label: "Accueil", href: "/" },
         { label: "Machines à café", href: "/machines/a-grains" },

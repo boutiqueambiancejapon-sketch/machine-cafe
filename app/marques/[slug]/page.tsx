@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { marqueHubs, findMarqueHub } from "@/lib/hubs";
+import { MARQUE_CONTENT, genericMarqueContent } from "@/lib/hub-content";
 import { HubPage } from "@/components/hub/HubPage";
 
 const SITE_URL = "https://10minutescafe.fr";
@@ -28,6 +29,7 @@ export default async function MarquePage({ params }: { params: Promise<{ slug: s
   return (
     <HubPage
       hub={hub}
+      content={MARQUE_CONTENT[slug] ?? genericMarqueContent(hub.label)}
       breadcrumb={[
         { label: "Accueil", href: "/" },
         { label: "Marques", href: `/marques/${slug}` },
