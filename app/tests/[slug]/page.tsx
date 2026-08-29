@@ -7,12 +7,33 @@ import { num, barColor } from "@/lib/format";
 import { mono, serif } from "@/components/ui";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { SpecsAccordion, FaqAccordion } from "@/components/test/SpecsAndFaq";
+import { getAllTestMdx, getTestMdx } from "@/lib/mdx";
+import { MdxArticleShell, mdxArticleJsonLd } from "@/components/mdx/MdxArticleShell";
+
+const SITE_URL = "https://10minutescafe.fr";
+
+// ─── Fiches test authored en MDX (data/products/*.json + <ProductRef>) ────
+// Additif : ne touche pas au gabarit structuré existant (magnifica-evo).
+// Un fichier content/tests/{slug}.mdx prend le pas sur le gabarit lib/data.ts
+// pour ce même slug.
 
 export function generateStaticParams() {
-  return testSlugs.map((slug) => ({ slug }));
+  const structured = testSlugs.map((slug) => ({ slug }));
+  const mdxSlugs = getAllTestMdx().map((t) => ({ slug: t.slug }));
+  const seen = new Set(structured.map((s) => s.slug));
+  return [...structured, ...mdxSlugs.filter((m) => !seen.has(m.slug))];
 }
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const mdxDoc = getTestMdx(slug);
+  if (mdxDoc) {
+    return {
+      title: mdxDoc.frontmatter.title,
+      description: mdxDoc.frontmatter.description,
+      alternates: { canonical: `${SITE_URL}/tests/${slug}` },
+    };
+  }
   return {
     title: "De'Longhi Magnifica Evo : notre test complet",
     description:
@@ -33,6 +54,26 @@ const thumbs = ["FACE", "PANNEAU", "BROYEUR", "DÉTAIL"];
 
 export default async function TestPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+
+  // ── Fiche test MDX (produit synchronisé data/products/) ──
+  const mdxDoc = getTestMdx(slug);
+  if (mdxDoc) {
+    const canonicalUrl = `${SITE_URL}/tests/${slug}`;
+    const { articleSchema, faqSchema } = mdxArticleJsonLd(mdxDoc.frontmatter, mdxDoc.content, canonicalUrl);
+    return (
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+        {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
+        <MdxArticleShell
+          frontmatter={mdxDoc.frontmatter}
+          content={mdxDoc.content}
+          breadcrumb={[{ label: "Accueil", href: "/" }, { label: "Tests", href: "/tests/magnifica-evo" }, { label: mdxDoc.frontmatter.title }]}
+        />
+      </>
+    );
+  }
+
+  // ── Gabarit structuré existant (démo Magnifica Evo, données lib/data.ts) ──
   if (!testSlugs.includes(slug)) notFound();
 
   return (
